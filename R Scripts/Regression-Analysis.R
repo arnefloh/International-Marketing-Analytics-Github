@@ -31,15 +31,20 @@ r1 <- my.data |> lm(formula = global_sales ~ critic_score + user_score)
 summary(r1)
 lm.beta(r1)
 
-check_model(r1)
-check_collinearity(r1)
-check_normality(r1)
 
 pred_val <- predict(r1)
 res_val <- residuals(r1) 
 res_val_tbl <- tibble(error = res_val)
 
 res_val_tbl |> ggplot(aes(x = error)) + geom_histogram()
+
+# Testing assumptions
+check_model(r1)
+check_collinearity(r1)
+check_normality(r1)
+
+
+
 
 # Regression analysis with filter
 my.data |> count(developer) |> arrange(desc(n))
@@ -63,6 +68,13 @@ wii_action |> cor_test(critic_score, user_score)
 
 r4 <- wii_action |> lm(formula = global_sales ~ user_score)                     
 summary(r4)
+
+check_model(r4)
+
+r4_log <- wii_action |> lm(formula = log(global_sales) ~ user_score)
+summary(r4_log)
+
+check_model(r4_log)
 
 # Normality Test
 shapiro_test(my.data$global_sales)
